@@ -1,7 +1,9 @@
+import {Loader} from './components/index.ts';
+
 function App() {
 
   return (
-      <div></div>
+      <Loader/>
   );
 };
 
