@@ -1,1 +1,5 @@
 export {Loader} from './loader/index.tsx'
+export {UserInfo} from './userinfo/index'
+export {CommentsList} from './comments-list/index'
+export {PostDetails} from './post-details/index'
+export {PostsList} from './posts-list/index'

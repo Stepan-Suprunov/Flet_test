@@ -1,10 +1,10 @@
-import {Loader} from './components/index.ts';
+import {PostsList} from "./components";
 
 function App() {
 
-  return (
-      <Loader/>
-  );
+    return (
+        <PostsList/>
+    );
 };
 
 export default App
