@@ -25,7 +25,7 @@ export function PostsList () {
                 const data = await fetchPosts();
                 setPosts(data);
             } catch (err) {
-                setError(err);
+                setError(err instanceof Error ? err.message : 'Failed to load Posts');
             } finally {
                 setLoading(false);
             };

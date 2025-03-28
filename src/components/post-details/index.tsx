@@ -29,7 +29,7 @@ export function PostDetails({ post }: PostDetailsPropsType) {
                 const data = await fetchUser(post.userId);
                 setUser(data);
             } catch (err) {
-                setUserError(err);
+                setUserError(err instanceof Error ? err.message : 'Failed to load User');
             } finally {
                 setUserLoading(false);
             };
@@ -47,7 +47,7 @@ export function PostDetails({ post }: PostDetailsPropsType) {
                 const data = await fetchComments(post.id)
                 setComments(data);
             } catch (err) {
-                setCommentsError(err);
+                setCommentsError(err instanceof Error ? err.message : 'Failed to load Comments');
             } finally {
                 setCommentsLoading(false);
             };
