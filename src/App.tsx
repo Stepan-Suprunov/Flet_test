@@ -1,10 +1,7 @@
-import {PostsList} from "./components";
+import {MainPage} from './pages/main-page.tsx';
 
 function App() {
-
-    return (
-        <PostsList/>
-    );
+    return <MainPage />;
 };
 
 export default App

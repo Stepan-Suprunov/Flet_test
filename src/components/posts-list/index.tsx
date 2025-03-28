@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {PostType} from '../../types';
 import {fetchPosts} from '../../requests/index.ts';
 import {Loader, PostDetails} from '../index.ts';
+import styles from './style.module.css'
 
 export function PostsList () {
 
@@ -41,15 +42,24 @@ export function PostsList () {
         <div>
             {selectedPost ? (
                 <div>
-                    <button onClick={backToPostsButtonHandler}>Назад</button>
+                    <button
+                        className={styles.backButton}
+                        onClick={backToPostsButtonHandler}
+                    >
+                        Вернуться к списку постов
+                    </button>
                     <PostDetails post={selectedPost} />
                 </div>
             ) : (
-                <ul>
+                <ul className={styles.list}>
                     {posts.map((post: PostType) => (
-                        <li key={post.id} onClick={() => onPostClickHandler(post)}>
-                            <h3>{post.title}</h3>
-                            <p>{post.body}</p>
+                        <li
+                            key={post.id}
+                            className={styles.listItem}
+                            onClick={() => onPostClickHandler(post)}
+                        >
+                            <h3 className={styles.postTitle}>{post.title}</h3>
+                            <p className={styles.postBody}>{post.body}</p>
                         </li>
                     ))}
                 </ul>

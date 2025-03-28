@@ -2,6 +2,7 @@ import {CommentType, PostType, UserType} from '../../types';
 import {useEffect, useState} from 'react';
 import {fetchComments, fetchUser} from '../../requests/index.ts';
 import {CommentsList, UserInfo} from '../index.ts';
+import styles from './style.module.css'
 
 type PostDetailsPropsType = {
     post: PostType;
@@ -56,13 +57,13 @@ export function PostDetails({ post }: PostDetailsPropsType) {
     }, [showComments, post.id]);
 
     return (
-        <div>
-            <h2>{post.title}</h2>
-            <p>{post.body}</p>
+        <div className={styles.postDetail}>
+            <h2 className={styles.postTitle}>{post.title}</h2>
+            <p className={styles.postBody}>{post.body}</p>
 
             <UserInfo user={user} loading={userLoading} error={userError} />
 
-            <button onClick={showCommentsButtonHandler}>
+            <button onClick={showCommentsButtonHandler} className={styles.commentButton}>
                 {showComments ? 'Скрыть комментарии' : 'Показать комментарии'}
             </button>
 

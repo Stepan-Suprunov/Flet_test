@@ -1,5 +1,6 @@
 import {CommentType} from '../../types';
 import {Loader} from '../index.ts';
+import styles from './style.module.css'
 
 type CommentsListPropsType = {
     comments: CommentType[] | null;
@@ -14,14 +15,14 @@ export function CommentsList ({ comments, loading, error }: CommentsListPropsTyp
     if (!comments) return null;
 
     return (
-        <div>
-            <h3>Комментарии ({comments.length})</h3>
-            <ul>
+        <div className={styles.commentsContainer}>
+            <h3 className={styles.commentsTitle}>Комментарии ({comments.length})</h3>
+            <ul className={styles.commentsList}>
                 {comments.map((comment: CommentType) => (
-                    <li key={comment.id}>
-                        <h4>{comment.name}</h4>
-                        <p>{comment.body}</p>
-                        <p>От: {comment.email}</p>
+                    <li key={comment.id} className={styles.commentItem}>
+                        <h4 className={styles.commentName}>{comment.name}</h4>
+                        <p className={styles.commentBody}>{comment.body}</p>
+                        <p className={styles.commentEmail}>От: {comment.email}</p>
                     </li>
                 ))}
             </ul>
