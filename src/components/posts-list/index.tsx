@@ -1,38 +1,18 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {PostType} from '../../types';
-import {fetchPosts} from '../../requests/index.ts';
 import {Loader, PostDetails} from '../index.ts';
 import styles from './style.module.css'
+import {useAppDispatch, useAppSelector} from '../../store/hooks.ts';
+import {clearSelectedPost, loadPosts, selectPost} from '../../store/slices/posts-slice.ts';
 
 export function PostsList () {
 
-    const [posts, setPosts] = useState<PostType[] | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
-
-    function backToPostsButtonHandler () {
-        setSelectedPost(null);
-    };
-
-    function onPostClickHandler (post: PostType) {
-        setSelectedPost(post);
-    };
+    const dispatch = useAppDispatch();
+    const { posts, loading, error, selectedPost } = useAppSelector((state) => state.posts)
 
     useEffect(() => {
-        const loadPosts = async () => {
-            try {
-                const data = await fetchPosts();
-                setPosts(data);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to load Posts');
-            } finally {
-                setLoading(false);
-            };
-        };
-
-        loadPosts();
-    }, []);
+        dispatch(loadPosts());
+    }, [dispatch]);
 
     if (loading) return <Loader />;
     if (error) return <div>{error}</div>;
@@ -44,7 +24,7 @@ export function PostsList () {
                 <div>
                     <button
                         className={styles.backButton}
-                        onClick={backToPostsButtonHandler}
+                        onClick={() => dispatch(clearSelectedPost())}
                     >
                         Вернуться к списку постов
                     </button>
@@ -56,7 +36,7 @@ export function PostsList () {
                         <li
                             key={post.id}
                             className={styles.listItem}
-                            onClick={() => onPostClickHandler(post)}
+                            onClick={() => dispatch(selectPost(post))}
                         >
                             <h3 className={styles.postTitle}>{post.title}</h3>
                             <p className={styles.postBody}>{post.body}</p>
