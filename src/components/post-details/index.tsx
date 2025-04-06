@@ -1,74 +1,45 @@
-import {CommentType, PostType, UserType} from '../../types';
+import {PostType} from '../../types';
 import {useEffect, useState} from 'react';
-import {fetchComments, fetchUser} from '../../requests/index.ts';
 import {CommentsList, UserInfo} from '../index.ts';
 import styles from './style.module.css'
+import {useAppDispatch, useAppSelector} from '../../store/hooks.ts';
+import {loadUser} from '../../store/slices/user-slice.ts';
+import {loadComments} from '../../store/slices/comments-slice.ts';
 
 type PostDetailsPropsType = {
     post: PostType;
 };
 
-export function PostDetails({ post }: PostDetailsPropsType) {
-
+export function PostDetails({post}: PostDetailsPropsType) {
+    const dispatch = useAppDispatch();
     const [showComments, setShowComments] = useState<boolean>(false);
-    const [user, setUser] = useState<UserType | null>(null);
-    const [userLoading, setUserLoading] = useState<boolean>(true);
-    const [userError, setUserError] = useState<string | null>(null);
 
-    const [comments, setComments] = useState<CommentType[] | null>(null);
-    const [commentsLoading, setCommentsLoading] = useState<boolean>(false);
-    const [commentsError, setCommentsError] = useState<string | null>(null);
-
-    function showCommentsButtonHandler () {
-        setShowComments(!showComments);
-    };
+    const {user, loading: userLoading, error: userError} = useAppSelector((state) => state.user);
+    const {comments, loading: commentsLoading, error: commentsError} = useAppSelector((state) => state.comments);
 
     useEffect(() => {
-        const loadUser = async () => {
-            try {
-                const data = await fetchUser(post.userId);
-                setUser(data);
-            } catch (err) {
-                setUserError(err instanceof Error ? err.message : 'Failed to load User');
-            } finally {
-                setUserLoading(false);
-            };
-        };
-
-        loadUser();
-    }, [post.userId]);
+        dispatch(loadUser(post.userId));
+    }, [dispatch, post.userId]);
 
     useEffect(() => {
-        if (!showComments) return;
-
-        const loadComments = async () => {
-            try {
-                setCommentsLoading(true);
-                const data = await fetchComments(post.id)
-                setComments(data);
-            } catch (err) {
-                setCommentsError(err instanceof Error ? err.message : 'Failed to load Comments');
-            } finally {
-                setCommentsLoading(false);
-            };
+        if (showComments) {
+            dispatch(loadComments(post.id));
         };
-
-        loadComments();
-    }, [showComments, post.id]);
+    }, [showComments, dispatch, post.id]);
 
     return (
         <div className={styles.postDetail}>
             <h2 className={styles.postTitle}>{post.title}</h2>
             <p className={styles.postBody}>{post.body}</p>
 
-            <UserInfo user={user} loading={userLoading} error={userError} />
+            <UserInfo user={user} loading={userLoading} error={userError}/>
 
-            <button onClick={showCommentsButtonHandler} className={styles.commentButton}>
+            <button onClick={() => setShowComments(!showComments)} className={styles.commentButton}>
                 {showComments ? 'Скрыть комментарии' : 'Показать комментарии'}
             </button>
 
             {showComments && (
-                <CommentsList comments={comments} loading={commentsLoading} error={commentsError} />
+                <CommentsList comments={comments} loading={commentsLoading} error={commentsError}/>
             )}
         </div>
     );
